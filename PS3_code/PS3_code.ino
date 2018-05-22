@@ -30,6 +30,10 @@ boolean lowbat=false;
 
 int i=0;
 
+
+#include <SoftwareSerial.h>
+
+SoftwareSerial Serial1(10, 11); // RX, TX
 /*----------------------------------------Main loop--------------------------------------*/
 
 void setup() {
@@ -44,7 +48,7 @@ void setup() {
       delay(500);
     }
   }
-  analogReadResolution(16);
+  
 }
 
 void loop() {
