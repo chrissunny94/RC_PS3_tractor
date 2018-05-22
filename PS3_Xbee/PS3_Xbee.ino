@@ -1,4 +1,7 @@
-#include <PS3USB.h>
+
+#include <PS3BT.h>
+#include <usbhub.h>
+
 
 #include <SoftwareSerial.h>
 
@@ -14,7 +17,8 @@ SoftwareSerial xbee(10, 9); // RX, TX
 
 USB Usb;
 /* You can create the instance of the class in two ways */
-PS3USB PS3(&Usb); // This will just create the instance
+BTD Btd(&Usb); 
+PS3BT PS3(&Btd);// This will just create the instance
 //PS3USB PS3(&Usb,0x00,0x15,0x83,0x3D,0x0A,0x57); // This will also store the bluetooth address - this can be obtained from the dongle when running the sketch
 
 bool printAngle;
