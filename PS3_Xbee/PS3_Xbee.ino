@@ -36,21 +36,47 @@ void loop() {
     if (PS3.PS3Connected || PS3.PS3NavigationConnected) {
         if (PS3.getAnalogButton(L1) ) {
             xbee.print(F("\r\nL1: "));
-            xbee.print(PS3.getAnalogButton(L1))
+            xbee.print(PS3.getAnalogButton(L1));
       }
       else if (PS3.getAnalogButton(L2) ) {
             xbee.print(F("\r\nL2: "));
-            xbee.print(PS3.getAnalogButton(L1))
+            xbee.print(PS3.getAnalogButton(L1));
       }
       else if (PS3.getAnalogButton(R1) ) {
-            xbee.print(F("\r\nL1: "));
-            xbee.print(PS3.getAnalogButton(L1))
+            xbee.print(F("\r\nR1: "));
+            xbee.print(PS3.getAnalogButton(R1));
       }
 
       else if (PS3.getAnalogButton(R2) ) {
-            xbee.print(F("\r\nL1: "));
-            xbee.print(PS3.getAnalogButton(L1))
+            xbee.print(F("\r\nR2: "));
+            xbee.print(PS3.getAnalogButton(L1));
       }
+      else if (PS3.getAnalogHat(LeftHatX) > 137 || PS3.getAnalogHat(LeftHatX) < 117 || PS3.getAnalogHat(LeftHatY) > 137 || PS3.getAnalogHat(LeftHatY) < 117 ){
+            xbee.print(F("\r\nLHX: "));
+            xbee.print(PS3.getAnalogHat(LeftHatX));
+            xbee.print(F("\r\nLHY: "));
+            xbee.print(PS3.getAnalogHat(LeftHatY));
+      }
+
+      else if (PS3.getAnalogHat(RightHatX) > 137 || PS3.getAnalogHat(RightHatX) < 117 || PS3.getAnalogHat(RightHatY) > 137 || PS3.getAnalogHat(RightHatY) < 117 ){
+            xbee.print(F("\r\nRHX: "));
+            xbee.print(PS3.getAnalogHat(RightHatX));
+            xbee.print(F("\r\nRHY: "));
+            xbee.print(PS3.getAnalogHat(RightHatY));
+      }
+
+      else if (PS3.getButtonClick(TRIANGLE)){
+          xbee.print(F("\r\nT"));
+        }
+      else if (PS3.getButtonClick(SQUARE)){
+          xbee.print(F("\r\nS"));
+        }
+      else if (PS3.getButtonClick(CROSS)){
+          xbee.print(F("\r\nC"));
+        }
+      else if (PS3.getButtonClick(CIRCLE)){
+          xbee.print(F("\r\nO"));
+        }  
     }
 
 
