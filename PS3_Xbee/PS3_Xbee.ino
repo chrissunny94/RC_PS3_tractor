@@ -2,13 +2,15 @@
 
 #include <SoftwareSerial.h>
 
-SoftwareSerial xbee(10, 11); // RX, TX
+SoftwareSerial xbee(10, 9); // RX, TX
 
 // Satisfy the IDE, which needs to see the include statment in the ino too.
 #ifdef dobogusinclude
 #include <spi4teensy3.h>
 #endif
 #include <SPI.h>
+
+//SPI for USB host 13,12,11
 
 USB Usb;
 /* You can create the instance of the class in two ways */
