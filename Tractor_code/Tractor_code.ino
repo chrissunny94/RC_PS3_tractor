@@ -1,3 +1,16 @@
+#include <SoftwareSerial.h>
+SoftwareSerial      xbee(2,3); 
+char message[2];
+
+bool circle_status=false;
+bool triangle_status=false;
+bool square_status=false;
+bool x_status=false;
+
+int LeftDrive = 9 ;
+int RightDrive= 8;
+
+
 #include <Servo.h>
 
 #define TX_INTERVAL 25
@@ -7,7 +20,7 @@
 #define STEERING_MIN 620 //20
 #define STEERING_MAX 1650 //120
 
-#define steeringOffsetPin A9
+#define steeringOffsetPin A1
 #define steeringPin 4
 #define drivePin 3
 
@@ -38,11 +51,14 @@ void initializePins(){
    steering.attach(steeringPin);
 }
 
-/*-------------------------------------------Main loop---------------------------------------*/
-void setup(){
+
+
+void setup()
+{
   initializePins();
+  xbee.begin(115200);
   Serial.begin(115200);
-  Serial1.begin(115200); 
+  
 }
 
 void loop(){
@@ -52,10 +68,43 @@ void loop(){
   calcDrive();
   setOutputs();
   sendData();
-}
+  }
 
-/*-----------------------------------------Main functions---------------------------------*/
-//  127000000
+void checkcommand(String cm , int value)
+ {
+   
+   if(cm == "L1"){
+    }
+   else if (cm == "L2"){
+    }
+   else if (cm == "R1"){
+    }
+   else if (cm == "R2"){
+    }
+   else if (cm == "T"){
+    }
+   else if (cm == "S"){
+    }
+   else if (cm == "C"){
+    }
+   else if (cm == "O"){
+    }
+   else if (cm == "LHX"){
+    }
+   else if (cm == "LHY"){
+    }
+   else if (cm == "RHX"){
+    }
+   else if (cm == "RHY"){
+    }
+   
+   
+   
+   
+
+ }
+
+
 
 void checkTimeout(){
   if(millis()>timeout+commTimeout){
@@ -67,15 +116,15 @@ void checkTimeout(){
 
 void sendData(){
   if(millis()>=(old_tx+TX_INTERVAL)){
-    Serial1.print("tick");
+    xbee.print("tick");
     old_tx=millis();
   }
 }
 
 void getInputs(){
   byte c;
-  if(Serial1.available())
-    c=Serial1.read();
+  if(xbee.available())
+    c=xbee.read();
    
   if(datastart){
     databuff[bytecount++]=c;
@@ -122,4 +171,5 @@ void setOutputs(){
   //steering.write(steeringCalc);
   steering.writeMicroseconds(steeringCalc);
   drive.writeMicroseconds(driveCalc);
-}
+} 
+

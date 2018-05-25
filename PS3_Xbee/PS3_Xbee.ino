@@ -1,8 +1,6 @@
 
 #include <PS3BT.h>
 #include <usbhub.h>
-
-
 #include <SoftwareSerial.h>
 
 SoftwareSerial xbee(10, 9); // RX, TX
@@ -15,6 +13,34 @@ SoftwareSerial xbee(10, 9); // RX, TX
 
 //SPI for USB host 13,12,11
 
+#define TX_INTERVAL 5
+#define RX_TIMEOUT 100
+#define STATUS_BLINKRATE 250
+
+#define deadzone_xbox 15
+#define offset_xbox 7
+#define deadzone_ps3 7
+#define offset_ps3 2
+
+byte filter[] ={0b10101010,0b01100110,0b10101010};
+byte filtere[]={0b11111110,0b01111110,0b01111111};
+byte vals[]={127,0,0b01000000};
+int pos, negOff, posOff, l2, r2 , l1 , r1 ,lhx ,rhx ,lhy , rhy;
+int speed_state=0;
+
+double old_tx;
+double old_rx;
+double old_blink;
+
+double avg=4;
+boolean lowbat=false;
+
+int i=0;
+
+
+
+
+
 USB Usb;
 /* You can create the instance of the class in two ways */
 BTD Btd(&Usb); 
@@ -25,6 +51,9 @@ bool printAngle;
 uint8_t state = 0;
 
 void setup() {
+  pinMode(7,OUTPUT);
+  pinMode(3,OUTPUT);
+  pinMode(4,OUTPUT);
   Serial.begin(115200);
 #if !defined(__MIPSEL__)
   while (!Serial); // Wait for serial port to connect - used on Leonardo, Teensy and other boards with built-in USB CDC serial connection
@@ -39,49 +68,65 @@ void setup() {
 
 void loop() {
   Usb.Task();
+   getControllerInputs();
+  sendData();
+  if(xbee.available()>=4){
+    while(xbee.available())
+      Serial.print(xbee.read()); 
+    digitalWrite(4,HIGH);
+    old_rx=millis();
+  }
     if (PS3.PS3Connected || PS3.PS3NavigationConnected) {
         if (PS3.getAnalogButton(L1) ) {
             xbee.print(F("\r\nL1: "));
             xbee.print(PS3.getAnalogButton(L1));
+            xbee.print("\r");
       }
       else if (PS3.getAnalogButton(L2) ) {
             xbee.print(F("\r\nL2: "));
             xbee.print(PS3.getAnalogButton(L1));
+            xbee.print("\r");
       }
       else if (PS3.getAnalogButton(R1) ) {
             xbee.print(F("\r\nR1: "));
             xbee.print(PS3.getAnalogButton(R1));
+            xbee.print("\r");
       }
 
       else if (PS3.getAnalogButton(R2) ) {
             xbee.print(F("\r\nR2: "));
             xbee.print(PS3.getAnalogButton(L1));
+            xbee.print("\r");
       }
       else if (PS3.getAnalogHat(LeftHatX) > 137 || PS3.getAnalogHat(LeftHatX) < 117 || PS3.getAnalogHat(LeftHatY) > 137 || PS3.getAnalogHat(LeftHatY) < 117 ){
             xbee.print(F("\r\nLHX: "));
             xbee.print(PS3.getAnalogHat(LeftHatX));
+            xbee.print("\r");
             xbee.print(F("\r\nLHY: "));
             xbee.print(PS3.getAnalogHat(LeftHatY));
+            xbee.print("\r");
       }
 
       else if (PS3.getAnalogHat(RightHatX) > 137 || PS3.getAnalogHat(RightHatX) < 117 || PS3.getAnalogHat(RightHatY) > 137 || PS3.getAnalogHat(RightHatY) < 117 ){
             xbee.print(F("\r\nRHX: "));
             xbee.print(PS3.getAnalogHat(RightHatX));
+            xbee.print("\r");
             xbee.print(F("\r\nRHY: "));
             xbee.print(PS3.getAnalogHat(RightHatY));
+            xbee.print("\r");
       }
 
       else if (PS3.getButtonClick(TRIANGLE)){
-          xbee.print(F("\r\nT"));
+          xbee.print(F("\r\nT:\r"));
         }
       else if (PS3.getButtonClick(SQUARE)){
-          xbee.print(F("\r\nS"));
+          xbee.print(F("\r\nS:\r"));
         }
       else if (PS3.getButtonClick(CROSS)){
-          xbee.print(F("\r\nC"));
+          xbee.print(F("\r\nC:\r"));
         }
       else if (PS3.getButtonClick(CIRCLE)){
-          xbee.print(F("\r\nO"));
+          xbee.print(F("\r\nO:\r"));
         }  
     }
 
@@ -91,6 +136,84 @@ void loop() {
     }
   
   }
+
+
+
+
+
+void sendData(){
+  if(millis()>=(old_tx+TX_INTERVAL)){
+    xbee.write(filter,sizeof(filter));
+    xbee.write(vals,sizeof(vals));
+    xbee.write(filtere,sizeof(filtere));
+    old_tx=millis();
+  }
+}
+
+/*------------------------------------Main Functions-----------------------------------------*/
+void getControllerInputs(){
+  if(PS3.PS3Connected){ 
+    digitalWrite(7,HIGH);
+    calcPs3Input();
+  }
+  else{
+    digitalWrite(7,LOW);
+    vals[0]=127;
+    vals[1]=0;
+    vals[2]=0b01000000;
+  }
+}
+
+
+
+void calcPs3Input(){
+  pos=PS3.getAnalogHat(LeftHatX)-128;
+  negOff=offset_ps3-deadzone_ps3;
+  posOff=offset_ps3+deadzone_ps3;
+  l2=PS3.getAnalogButton(L2);
+  r2=PS3.getAnalogButton(R2);
+  if(PS3.getButtonClick(START)&&PS3.getButtonPress(L1)&&PS3.getButtonPress(R1)){
+     speed_state++;
+     if(speed_state==3)
+       speed_state=0;
+      
+     PS3.setLedOff(LED3);
+     PS3.setLedOff(LED4);  
+     if(speed_state==1)
+       PS3.setLedOn(LED4);
+     else if(speed_state==2){
+       PS3.setLedOn(LED3);
+       PS3.setLedOn(LED4);
+     }
+     
+  }
+  
+  vals[0]=map(min(pos,negOff),negOff,-128,127,0)+map(max(pos,posOff),posOff,127,0,128); 
+
+  if(l2>0){
+    vals[1]=l2;
+    vals[2]|=0b10000000;
+  }
+  else{
+    switch(speed_state){
+       case 0:
+         vals[1]=r2*0.50;
+         break;
+       case 1:
+         vals[1]=r2*((PS3.getButtonPress(TRIANGLE))? 1:0.70);
+         break;
+       case 2:
+         vals[1]=r2;
+         break; 
+    }
+    vals[2]&=0b01111111;
+  }
+  if(PS3.getButtonPress(CIRCLE))
+    vals[2]|=0b01000000;
+  else
+    vals[2]&=0b10111111;
+}
+  
 
   
 
