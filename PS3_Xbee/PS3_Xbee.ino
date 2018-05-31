@@ -172,21 +172,6 @@ void calcPs3Input(){
   posOff=offset_ps3+deadzone_ps3;
   l2=PS3.getAnalogButton(L2);
   r2=PS3.getAnalogButton(R2);
-  if(PS3.getButtonClick(START)&&PS3.getButtonPress(L1)&&PS3.getButtonPress(R1)){
-     speed_state++;
-     if(speed_state==3)
-       speed_state=0;
-      
-     PS3.setLedOff(LED3);
-     PS3.setLedOff(LED4);  
-     if(speed_state==1)
-       PS3.setLedOn(LED4);
-     else if(speed_state==2){
-       PS3.setLedOn(LED3);
-       PS3.setLedOn(LED4);
-     }
-     
-  }
   
   vals[0]=map(min(pos,negOff),negOff,-128,127,0)+map(max(pos,posOff),posOff,127,0,128); 
 
@@ -194,24 +179,8 @@ void calcPs3Input(){
     vals[1]=l2;
     vals[2]|=0b10000000;
   }
-  else{
-    switch(speed_state){
-       case 0:
-         vals[1]=r2*0.50;
-         break;
-       case 1:
-         vals[1]=r2*((PS3.getButtonPress(TRIANGLE))? 1:0.70);
-         break;
-       case 2:
-         vals[1]=r2;
-         break; 
-    }
-    vals[2]&=0b01111111;
-  }
-  if(PS3.getButtonPress(CIRCLE))
-    vals[2]|=0b01000000;
-  else
-    vals[2]&=0b10111111;
+
+  
 }
   
 
