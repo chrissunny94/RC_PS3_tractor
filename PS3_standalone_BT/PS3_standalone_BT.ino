@@ -87,25 +87,27 @@ void loop() {
     
     
     if ( PS3.getButtonPress(L2) || PS3.getButtonPress(R2)) {
-      int L_channel = PS3.getAnalogButton(L2);
-      int R_channel = PS3.getAnalogButton(R2);
+      //int L_channel = PS3.getAnalogButton(L2);
+      
       bool L1_Click = PS3.getButtonPress(L1);
-      bool R1_Click = PS3.getButtonPress(R1);
+      
       /////////////////////////////////////////////
       if (L1_Click )
-        {analogWrite(left_2,L_channel);
+        {analogWrite(left_2,PS3.getAnalogButton(L2));
          analogWrite(left_1,0);} 
       else {
-        analogWrite(left_1,L_channel);
+        analogWrite(left_1,PS3.getAnalogButton(L2));
         analogWrite(left_2,0);
       }
+      //int R_channel = PS3.getAnalogButton(R2);
+      bool R1_Click = PS3.getButtonPress(R1);
       //////////////////////////////////////////////
       if (R1_Click){
             analogWrite(right_1,0);
-            analogWrite(right_2,R_channel);
+            analogWrite(right_2,PS3.getAnalogButton(R2));
       }
       else{
-          analogWrite(right_1,R_channel);
+          analogWrite(right_1,PS3.getAnalogButton(R2));
           analogWrite(right_2,0);
       }
     }
