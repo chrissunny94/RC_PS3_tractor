@@ -21,8 +21,10 @@ Servo tilt_bucket;
 Servo back_hoe_x;
 Servo back_hoe_y;
 
-int left_drive_pin;
-int right_drive_pin;
+
+//Please enter these pins
+int left_drive_pin = 5 ;
+int right_drive_pin = 6;
 
 int lift_actuator_pin;
 int tilt_bucket_pin;
@@ -93,22 +95,28 @@ void loop() {
       
       /////////////////////////////////////////////
       if (L1_Click )
-        {analogWrite(left_2,PS3.getAnalogButton(L2));
-         analogWrite(left_1,0);} 
+        {
+        left_drive.write(map(PS3.getAnalogButton(L2),127,255,0,255));
+        //analogWrite(left_2,PS3.getAnalogButton(L2));
+         //analogWrite(left_1,0);
+         } 
       else {
-        analogWrite(left_1,PS3.getAnalogButton(L2));
-        analogWrite(left_2,0);
+          left_drive.write(map(PS3.getAnalogButton(L2),127,0,0,255));
+          //analogWrite(left_1,PS3.getAnalogButton(L2));
+          //analogWrite(left_2,0);
       }
       //int R_channel = PS3.getAnalogButton(R2);
       bool R1_Click = PS3.getButtonPress(R1);
       //////////////////////////////////////////////
       if (R1_Click){
-            analogWrite(right_1,0);
-            analogWrite(right_2,PS3.getAnalogButton(R2));
+            right_drive.write(map(PS3.getAnalogButton(L2),127,255,0,255));
+            //analogWrite(right_1,0);
+            //analogWrite(right_2,PS3.getAnalogButton(R2));
       }
       else{
-          analogWrite(right_1,PS3.getAnalogButton(R2));
-          analogWrite(right_2,0);
+          right_drive.write(map(PS3.getAnalogButton(L2),127,0,0,255));
+          //analogWrite(right_1,PS3.getAnalogButton(R2));
+          //analogWrite(right_2,0);
       }
     }
     else{
