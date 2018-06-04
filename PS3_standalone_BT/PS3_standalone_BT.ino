@@ -5,6 +5,7 @@
  */
 
 #include <PS3BT.h>
+#include <PS3USB.h>
 #include <usbhub.h>
 #include <Servo.h>
 
@@ -42,10 +43,13 @@ int back_hoe_y_pin;
 USB Usb;
 //USBHub Hub1(&Usb); // Some dongles have a hub inside
 
-BTD Btd(&Usb); // You have to create the Bluetooth Dongle instance like so
+//BTD Btd(&Usb); // You have to create the Bluetooth Dongle instance like so
 /* You can create the instance of the class in two ways */
-PS3BT PS3(&Btd); // This will just create the instance
+//PS3BT PS3(&Btd); // This will just create the instance
 //PS3BT PS3(&Btd, 0x00, 0x15, 0x83, 0x3D, 0x0A, 0x57); // This will also store the bluetooth address - this can be obtained from the dongle when running the sketch
+
+PS3USB PS3(&Usb);
+
 
 bool printTemperature, printAngle;
 
@@ -66,7 +70,7 @@ void init_actuators(){
 void setup() {
   init_actuators();
   
-  Serial.begin(115200);
+  Serial.begin(9600);
 #if !defined(__MIPSEL__)
   while (!Serial); // Wait for serial port to connect - used on Leonardo, Teensy and other boards with built-in USB CDC serial connection
 #endif
@@ -104,6 +108,7 @@ void loop() {
           left_drive.write(map(PS3.getAnalogButton(L2),127,0,0,255));
           //analogWrite(left_1,PS3.getAnalogButton(L2));
           //analogWrite(left_2,0);
+          Serial.print("L\r\n");
       }
       //int R_channel = PS3.getAnalogButton(R2);
       bool R1_Click = PS3.getButtonPress(R1);
@@ -113,10 +118,12 @@ void loop() {
             //analogWrite(right_1,0);
             //analogWrite(right_2,PS3.getAnalogButton(R2));
       }
-      else{
+      else {
           right_drive.write(map(PS3.getAnalogButton(L2),127,0,0,255));
           //analogWrite(right_1,PS3.getAnalogButton(R2));
           //analogWrite(right_2,0);
+          Serial.print("R\r\n");
+          
       }
     }
     else{

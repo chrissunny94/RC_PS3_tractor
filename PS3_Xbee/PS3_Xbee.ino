@@ -54,7 +54,7 @@ void setup() {
   pinMode(7,OUTPUT);
   pinMode(3,OUTPUT);
   pinMode(4,OUTPUT);
-  Serial.begin(115200);
+  Serial.begin(9600);
 #if !defined(__MIPSEL__)
   while (!Serial); // Wait for serial port to connect - used on Leonardo, Teensy and other boards with built-in USB CDC serial connection
 #endif
@@ -63,7 +63,7 @@ void setup() {
     while (1); //halt
   }
   Serial.print(F("\r\nPS3 USB Library Started"));
-  xbee.begin(115200);
+  xbee.begin(9600);
 }
 
 void loop() {
