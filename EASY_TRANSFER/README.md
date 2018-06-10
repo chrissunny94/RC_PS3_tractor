@@ -64,7 +64,7 @@ left and right hat
 	swing_actuator
 	bucket_actuator
 	
-
+##### UP , DOWN , LEFT , RIGHT  
 
 
 ## Wiring 
