@@ -74,5 +74,8 @@ left and right hat
 
 ## Wiring 
 
+
 ![](../docs/usb_host_mini.jpg) 
 ![](../docs/USB_Host_Shield_and_Teensy2.png) 
+
+![](../docs/Teensy with mini host shield.png) 
