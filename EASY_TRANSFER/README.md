@@ -1,5 +1,5 @@
 # FINAL WORKING CODE
-
+--------------------------------------
 
 ## PS3_standalone_BT
 
@@ -42,24 +42,26 @@ I have attached the image of a JCB for better clarity.
 
 
 
-###Tractor drive (differential drive )
 
+Tractor drive (differential drive )
+====================
 all controlled using L1, L2 & R1, R2
 
 	left_drive
 	right_drive
 	
 	
-###attachments 
+attachments 
+=========================
 
-#####When Square is pressed
+##When Square is pressed
 
 left and right hat
 	
 	lift_actuator
 	tilt_actuator
 	
-##### When triangle is pressed 
+## When triangle is pressed 
 
 left and right hat 
 	
@@ -67,7 +69,7 @@ left and right hat
 	swing_actuator
 	bucket_actuator
 	
-##### UP , DOWN , LEFT , RIGHT  
+## UP , DOWN , LEFT , RIGHT  
 
 
 ## Wiring 
