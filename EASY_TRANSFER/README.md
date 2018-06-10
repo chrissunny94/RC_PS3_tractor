@@ -40,6 +40,8 @@ I have attached the image of a JCB for better clarity.
 
 ![](../docs/Backhoe-Cylinder-Identification-Diagram.jpg) 
 
+
+
 ###Tractor drive (differential drive )
 all controlled using L1, L2 & R1, R2
 
