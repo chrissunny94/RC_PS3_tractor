@@ -41,14 +41,25 @@ I have attached the image of a JCB for better clarity.
 ![](../docs/Backhoe-Cylinder-Identification-Diagram.jpg) 
 
 ###Tractor drive (differential drive )
+all controlled using L1, L2 & R1, R2
 
 	left_drive
 	right_drive
 	
+	
 ###attachments 
+
+#####When Square is pressed
+
+left and right hat
 	
 	lift_actuator
 	tilt_actuator
+	
+##### When triangle is pressed 
+
+left and right hat 
+	
 	boom_lift
 	swing_actuator
 	bucket_actuator
