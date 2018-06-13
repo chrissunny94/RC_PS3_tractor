@@ -79,3 +79,4 @@ left and right hat
 ![](../docs/USB_Host_Shield_and_Teensy2.png) 
 
 ![](../docs/Teensy with mini host shield.png) 
+![](../docs/uno_teensy.jpg)
