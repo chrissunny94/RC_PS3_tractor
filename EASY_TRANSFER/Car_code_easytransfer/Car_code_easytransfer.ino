@@ -29,6 +29,9 @@ Servo swing_actuator;
 Servo bucket_actuator;
 Servo dipper_actuator;
 
+int starter = 12;
+int stopper = 13;
+
 //data group
 struct RECEIVE_DATA_STRUCTURE{
 
@@ -52,7 +55,7 @@ void init_pins(){
   boom_lift.attach(8);
   swing_actuator.attach(9);
   bucket_actuator.attach(10);
-  dipper_actuator.attach(10);
+  dipper_actuator.attach(11);
   
   }
 
@@ -105,9 +108,14 @@ void loop(){
           if (txdata.right)
             Cross = !Cross;
 
+            if (Cross)
+              digitalWrite(HIGH , starter);
+
        case 6:
           if (txdata.left)
             Circle = !Circle;
+             if (Circle)
+              digitalWrite(HIGH , stopper);
           if (txdata.right)
             Triangle = !Triangle;
              
