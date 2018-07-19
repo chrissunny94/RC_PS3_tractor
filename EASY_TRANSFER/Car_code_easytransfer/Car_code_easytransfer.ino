@@ -2,6 +2,8 @@
 
 #include <EasyTransfer.h>
 #include <SoftwareSerial.h>
+#include <Servo.h>
+
 
 SoftwareSerial mySerial(2, 3); // RX, TX
 
@@ -9,6 +11,22 @@ SoftwareSerial mySerial(2, 3); // RX, TX
 EasyTransfer ET;
 
 int const ledpin = 13;
+int val;
+
+bool Triangle = false ;
+bool Square = false;
+bool Cross = false;
+bool Circle = false;
+
+Servo left_drive;
+Servo right_drive;
+
+Servo lift_actuator;
+Servo tilt_actuator;
+
+Servo boom_lift;
+Servo swing_actuator;
+Servo bucket_actuator;
 
 //data group
 struct RECEIVE_DATA_STRUCTURE{
@@ -21,6 +39,20 @@ struct RECEIVE_DATA_STRUCTURE{
 };
 
 RECEIVE_DATA_STRUCTURE txdata;
+
+void init_pins(){
+  
+  left_drive.attach(4);
+  right_drive.attach(5);
+
+  lift_actuator.attach(6);
+  tilt_actuator.attach(7);
+
+  boom_lift.attach(8);
+  swing_actuator.attach(9);
+  bucket_actuator.attach(10);
+  
+  }
 
 void setup(){
  
@@ -48,21 +80,22 @@ void loop(){
     switch(txdata.count){
       
       case 0:
-        if (txdata.left>0){
-           digitalWrite(5,txdata.left);
-           digitalWrite(6,0);
-        }
-        else{
-           digitalWrite(6,-1*txdata.left);
-           digitalWrite(5,0);}
-        if (txdata.right>0){
-           digitalWrite(9,txdata.right);
-           digitalWrite(10,0);}
-        else{
-           digitalWrite(10,-1*txdata.right);
-           digitalWrite(9,0);}
-        break;
-        
+
+      
+        left_drive.write(map(txdata.left, -255, 255, 0, 255)); 
+        right_drive.write(map(txdata.right, -255, 255, 0, 255)); 
+       case 5:
+          if (txdata.left)
+            Square = !Square;
+          if (txdata.right)
+            Cross = !Cross;
+
+       case 6:
+          if (txdata.left)
+            Circle = !Circle;
+          if (txdata.right)
+            Triangle = !Triangle;
+             
         
         default:
           Serial.println();
