@@ -82,4 +82,4 @@ left and right hat
 
 ![](../docs/uno_teensy.jpg)
 
-![](../docs/circuit_diagram.png)
+![](../docs/new.png)
