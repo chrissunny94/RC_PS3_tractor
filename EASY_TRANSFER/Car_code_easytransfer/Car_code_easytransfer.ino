@@ -27,6 +27,7 @@ Servo tilt_actuator;
 Servo boom_lift;
 Servo swing_actuator;
 Servo bucket_actuator;
+Servo dipper_actuator;
 
 //data group
 struct RECEIVE_DATA_STRUCTURE{
@@ -51,6 +52,7 @@ void init_pins(){
   boom_lift.attach(8);
   swing_actuator.attach(9);
   bucket_actuator.attach(10);
+  dipper_actuator.attach(10);
   
   }
 
@@ -84,6 +86,19 @@ void loop(){
       
         left_drive.write(map(txdata.left, -255, 255, 0, 255)); 
         right_drive.write(map(txdata.right, -255, 255, 0, 255)); 
+
+      case 1:
+        if (Triangle){
+          swing_actuator.write(map(txdata.left, -255, 255, 0, 255)); 
+          boom_lift.write(map(txdata.right, -255, 255, 0, 255)); 
+          }
+
+      case 2:
+        if (Triangle){
+          dipper_actuator.write(map(txdata.left, -255, 255, 0, 255)); 
+          bucket_actuator.write(map(txdata.right, -255, 255, 0, 255)); 
+          }
+       
        case 5:
           if (txdata.left)
             Square = !Square;
