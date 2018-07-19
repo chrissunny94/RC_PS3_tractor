@@ -74,16 +74,16 @@ left and right hat
 
 ## Wiring 
 
-Host Shield     Teensy          Teensy++
------------     ------          --------
-SS              10              10
-INT             9               9
-MOSI            2               22
-MISO            3               23
-SCK             1               21
-Reset           Vcc             Vcc
-+3.3V           Vcc (MCP1825)   Vcc  (must use MCP1825)
-GND             GND             GND
+	Host Shield     Teensy          Teensy++
+	-----------     ------          --------
+	SS              10              10
+	INT             9               9
+	MOSI            2               22
+	MISO            3               23
+	SCK             1               21
+	Reset           Vcc             Vcc
+	+3.3V           Vcc (MCP1825)   Vcc  (must use MCP1825)
+	GND             GND             GND
 
 
 
