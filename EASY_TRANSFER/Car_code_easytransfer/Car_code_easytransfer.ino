@@ -4,6 +4,14 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+#define SERVOMIN  150  // Minimum pulse length count out of 4096.
+#define SERVOMAX  700 // Maximum pulse length count out of 4096.
+int servoNo = 0; // Defines a counter for servos.
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();   // Initiates library.
+
 
 SoftwareSerial mySerial(2, 3); // RX, TX
 
@@ -14,20 +22,21 @@ int const ledpin = 13;
 int val;
 
 bool Triangle = false ;
+int last_press ;
 bool Square = false;
 bool Cross = false;
 bool Circle = false;
 
-Servo left_drive;
-Servo right_drive;
+int left_drive;
+int right_drive;
 
-Servo lift_actuator;
-Servo tilt_actuator;
+int lift_actuator = 0;
+int tilt_actuator = 7;
 
-Servo boom_lift;
-Servo swing_actuator;
-Servo bucket_actuator;
-Servo dipper_actuator;
+int boom_lift = 8;
+int swing_actuator = 15;
+int bucket_actuator = 4;
+int dipper_actuator = 5;
 
 int starter = 12;
 int stopper = 13;
@@ -44,92 +53,90 @@ struct RECEIVE_DATA_STRUCTURE{
 
 RECEIVE_DATA_STRUCTURE txdata;
 
-void init_pins(){
-  
-  left_drive.attach(4);
-  right_drive.attach(5);
 
-  lift_actuator.attach(6);
-  tilt_actuator.attach(7);
-
-  boom_lift.attach(8);
-  swing_actuator.attach(9);
-  bucket_actuator.attach(10);
-  dipper_actuator.attach(11);
-  
-  }
 
 void setup(){
  
   Serial.begin(115200);
-  pinMode(ledpin, OUTPUT);
-  pinMode(10, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
+  
   mySerial.begin(115200);
   ET.begin(details(txdata), &mySerial); //start library
   Serial.print("Module Started");
+  pwm.begin();         // Sends PWM signals.
+  pwm.setPWMFreq(60);  // Makes servos run at 60 Hz rate.
+  delay(20);
 
 
 }
 
+
 void loop(){
+  
+  
   if(ET.receiveData()){ //check for incoming data
 
     
-   
+    Serial.println(txdata.count);
     Serial.println(txdata.left);
     Serial.println(txdata.right);
+    Serial.println(Triangle);
 
     switch(txdata.count){
       
       case 0:
-
-      
-        left_drive.write(map(txdata.left, -255, 255, 0, 255)); 
-        right_drive.write(map(txdata.right, -255, 255, 0, 255)); 
-
+         
+         
+         
+         //delay(300);
+        //left_drive.write(map(txdata.left, -255, 255, 0, 255)); 
+        //right_drive.write(map(txdata.right, -255, 255, 0, 255)); 
+        break;
       case 1:
+      
         if (Triangle){
-          swing_actuator.write(map(txdata.left, -255, 255, 0, 255)); 
-          boom_lift.write(map(txdata.right, -255, 255, 0, 255)); 
+          pwm.setPWM(boom_lift, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
+          
+          //dipper_actuator.write(map(txdata.left, -255, 255, 0, 255)); 
+         
           }
 
+          else
+          pwm.setPWM(swing_actuator, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
+          break;
       case 2:
+      
         if (Triangle){
-          dipper_actuator.write(map(txdata.left, -255, 255, 0, 255)); 
-          bucket_actuator.write(map(txdata.right, -255, 255, 0, 255)); 
+          
+          pwm.setPWM(lift_actuator, 0, map(txdata.left, 0, 255, SERVOMIN, SERVOMAX));
+          //bucket_actuator.write(map(txdata.right, -255, 255, 0, 255)); 
           }
-       
+          else
+            pwm.setPWM(tilt_actuator, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
+          break;
        case 5:
           if (txdata.left)
             Square = !Square;
           if (txdata.right)
-            Cross = !Cross;
+             Cross = !Cross;
 
             if (Cross)
-              digitalWrite(HIGH , starter);
-
+             // digitalWrite(HIGH , starter);
+            break;
        case 6:
           if (txdata.left)
             Circle = !Circle;
              if (Circle)
               digitalWrite(HIGH , stopper);
-          if (txdata.right)
+          if (txdata.right )
             Triangle = !Triangle;
-             
-        
+          //last_press = txdata.right;  
+          break;
         default:
           Serial.println();
-          
-          digitalWrite(5,0);
-          digitalWrite(6,0);
-          digitalWrite(9,0);
-          digitalWrite(10,0);
+          break;
+           
       }   
    
   }
   
 }
-
