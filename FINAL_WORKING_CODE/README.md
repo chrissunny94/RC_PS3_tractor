@@ -1,99 +1,64 @@
-# FINAL WORKING CODE
---------------------------------------
+## Readme to be updated
 
-## PS3_standalone_BT
+### - Step #1
 
-This is the code to work on without the xbee connection .
+ - **Flash** the PS4_ArduinoUNO_pair code ,
 
-here also you can make similar changes to switch from BT to USB . 
-* BT is by default *
+#### Pairing the PS4 Controller
+----------------------------------------------------
+In order to pair the Bluetooth based PS4 controller with Arduino. Set the gamepad controller into pairing mode by pressing and holding the **“PlayStation button”** and **”Share button”** at the same time. Hold these two buttons until the light on the PS4 controller starts flashing rapidly. Now the Arduino should automatically detect your PS4 controller.
 
-## PS3_easy_transfer || PS4_easy_transfer
+Once the PS4 controller is connected with your Arduino robot, the controller’s light will turn blue.
 
-Tested with
+### - step #2
+------------------------------------------------------------
+ - **Flash** the regular code without the pair instruction 
 
-- Arduino Uno 
-- USB HostShield
-- Xbee Shield
 
-For **USB** connection 
+for your referance , this is what has changed 
 
+```
 	USB Usb;
-	//PS3USB PS3(&Usb);
-	BTD Btd(&Usb);
-	PS3BT PS3(&Btd);
+	//USBHub Hub1(&Usb); // Some dongles have a hub inside
+	BTD Btd(&Usb); // You have to create the Bluetooth Dongle instance like so
 
-For **BlueTooth** connection
+	/* You can create the instance of the PS4BT class in two ways */
+	// This will start an inquiry and then pair with the PS4 controller - you only have to do this once
+	// You will need to hold down the PS and Share button at the same time, the PS4 controller will then start to blink rapidly indicating that it is in pairing mode
+	PS4BT PS4(&Btd, PAIR);
 
-	USB Usb;
-	PS3USB PS3(&Usb);
-	//BTD Btd(&Usb);
-	//PS3BT PS3(&Btd);
-	
+	// After that you can simply create the instance like so and then press the PS button on the device
+	//PS4BT PS4(&Btd);
+```
 
-	
-## carCode(for the tractor)
+*It also contains , the code for sending the button presses over the XBee connection .*
 
-This is the code for recieving the decoding the data thats coming from xbee (via serial)
 
-I have attached the image of a JCB for better clarity.
+Once the above two steps are completed , you would see .
 
-![](../docs/Backhoe-Cylinder-Identification-Diagram.jpg) 
+![](../docs/PS4_paired.webp) 
 
 
 
+###- Step #3 
+-------------------------------------------------------------------
 
-Tractor drive (differential drive )
-====================
-all controlled using L1, L2 & R1, R2
-
-	left_drive
-	right_drive
-	
-	
-attachments 
-=========================
-
-##When Square is pressed
-
-left and right hat
-	
-	lift_actuator
-	tilt_actuator
-	
-## When triangle is pressed 
-
-left and right hat 
-	
-	boom_lift
-	swing_actuator
-	bucket_actuator
-	
-## UP , DOWN , LEFT , RIGHT  
+Now that the code required for transfering the button activity and the PS controller is paired succefully , we can hook up .
 
 
-## Wiring 
+**Arduino Nano with the 16channel servo module**  to the laptop/PC
 
-	Host Shield     Teensy          Teensy++
-	-----------     ------          --------
-	SS              10              10
-	INT             9               9
-	MOSI            2               22
-	MISO            3               23
-	SCK             1               21
-	Reset           Vcc             Vcc
-	+3.3V           Vcc (MCP1825)   Vcc  (must use MCP1825)
-	GND             GND             GND
+
+Select the **correct serial port or COM port on windows**
+
+![](../docs/port.png) 
+
+Open  **serial Monitor**
+
+![](../docs/SerialMonitor.png)  
 
 
 
 
 
-![](../docs/usb_host_mini.jpg) 
-![](../docs/USB_Host_Shield_and_Teensy2.png) 
 
-![](../docs/teen.jpg) 
-
-![](../docs/uno_teensy.jpg)
-
-![](../docs/new.png)
