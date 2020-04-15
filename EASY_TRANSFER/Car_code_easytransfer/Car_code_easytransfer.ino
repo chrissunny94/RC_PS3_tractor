@@ -31,15 +31,15 @@ int left_drive;
 int right_drive;
 
 int lift_actuator = 0;
-int tilt_actuator = 7;
+int tilt_actuator = 1;
 
-int boom_lift = 8;
-int swing_actuator = 15;
+int boom_lift = 2;
+int swing_actuator = 3;
 int bucket_actuator = 4;
 int dipper_actuator = 5;
 
-int starter = 12;
-int stopper = 13;
+int starter = 6;
+int stopper = 7;
 
 //data group
 struct RECEIVE_DATA_STRUCTURE{
@@ -95,25 +95,38 @@ void loop(){
       
         if (Triangle){
           pwm.setPWM(boom_lift, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
-          
-          //dipper_actuator.write(map(txdata.left, -255, 255, 0, 255)); 
-         
+          pwm.setPWM(swing_actuator, 0, map(txdata.left, 0, 255, SERVOMIN, SERVOMAX));
           }
 
           else
-          pwm.setPWM(swing_actuator, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
+          Serial.println("Disbled");
           break;
       case 2:
       
         if (Triangle){
           
-          pwm.setPWM(lift_actuator, 0, map(txdata.left, 0, 255, SERVOMIN, SERVOMAX));
+          pwm.setPWM(lift_actuator, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
+          pwm.setPWM(tilt_actuator, 0, map(txdata.left, 0, 255, SERVOMIN, SERVOMAX));
+          
           //bucket_actuator.write(map(txdata.right, -255, 255, 0, 255)); 
           }
           else
             pwm.setPWM(tilt_actuator, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
           break;
+       case 3:
+
+            if (Triangle){
+              pwm.setPWM(bucket_actuator, 0, map(txdata.right, 0, 255, SERVOMIN, SERVOMAX));
+              pwm.setPWM(dipper_actuator, 0, map(txdata.left, 0, 255, SERVOMIN, SERVOMAX));
+          
+              }
+
+            else
+              break;
+       
        case 5:
+
+       
           if (txdata.left)
             Square = !Square;
           if (txdata.right)
